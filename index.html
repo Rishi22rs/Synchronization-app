@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script defer src="script.js"></script>
+  <body>
+    <div id="player"></div>
+
+    <script>
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId: 'IHNzOHi8sJs',
+          playerVars:{
+            'rel':0,
+            'controls':0,
+            'disablekb':0
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+      function onPlayerReady(event) {
+        
+      }
+
+      var done = true;
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+          setTimeout(stopVideo, 6000);
+          done = true;
+        }
+      }
+     
+    </script>
+    <br>
+    <button onclick="playVideoFunc()">Play</button>
+    <button onclick="pauseVideoFunc()">Pause</button>
+    <div id="line" onclick="clickedFunc(event)">
+      <div id="anchor"></div>
+    </div>
+    <form id='send-container' style="margin-top:100px">
+      <input type="text" id="message-input"/>
+      <button type="submit" id="send-button">Send</button>
+    </form>
+    <div id="msg-container"></div>
+  </body>
+  <style>
+     #line{
+        width: 640px;
+        height: 47px;
+        border-bottom: 1px solid black;
+        position: absolute;
+      }
+      #anchor{
+        z-index: 10;
+        width: 10px;
+        top:37px;
+        left:0%;
+        height: 19px;
+        border: 1px solid black;
+        position: absolute;
+      }
+  </style>
+</html>
