@@ -6,6 +6,11 @@ const cors=require('cors')
 
 app.use(cors())
 // app.use(express.static(__dirname)+'/../../build')
+const router=express.Router()
+
+router.get('/',(req,res)=>{
+    res.send("Yeah i am fine")
+})
 
 server.listen(3000,()=>{
     console.log('App is listening at port 3000')
