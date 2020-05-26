@@ -1,11 +1,17 @@
-const io=require('socket.io')(3000)
-const cors=require('cors')
 const express=require('express')
-
 const app=express()
+const server=require('http').Server(app)
+const io=require('socket.io')(server)
+const cors=require('cors')
 
-const user={}
 app.use(cors())
+// app.use(express.static(__dirname)+'/../../build')
+
+server.listen(3000,()=>{
+    console.log('App is listening at port 3000')
+})
+const user={}
+
 io.on('connection',socket=>{
     socket.on('new-user',name=>{
         user[socket.id]=name
@@ -23,6 +29,9 @@ io.on('connection',socket=>{
     socket.on('clicked',value=>{
         console.log(value)
         socket.broadcast.emit('click',value)
+    })
+    socket.on('videoUrl',videoUrl=>{
+        socket.broadcast.emit('thisVideo',videoUrl)
     })
 })
 

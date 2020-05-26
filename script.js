@@ -3,6 +3,23 @@ const messageForm=document.getElementById('send-container')
 const messageInput=document.getElementById('message-input')
 const messageContainer=document.getElementById('msg-container')
 
+function onYouTubeIframe(videoUrl) {
+    player = new YT.Player('player', {
+      height: '390',
+      width: '640',
+      videoId: videoUrl,
+      playerVars:{
+        'rel':0,
+        'controls':0,
+        'disablekb':0
+      },
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
+
 const appendMsg=(message)=>{
     const messageElement=document.createElement('div')
     messageElement.innerText=message
@@ -33,9 +50,12 @@ socket.on('pause',(pause)=>{
     pauseVideo()
 })
 socket.on('click',(clicked)=>{
-    console.log(clicked)
     document.getElementById("anchor").style.left = clicked+"%";
     player.seekTo(clicked/100*player.getDuration(), true);
+})
+
+socket.on('thisVideo',(thisVideo)=>{
+    onYouTubeIframe(thisVideo)
 })
 
 messageForm.addEventListener('submit',e=>{
@@ -45,6 +65,12 @@ messageForm.addEventListener('submit',e=>{
     socket.emit('send-chat-message',message)
     messageInput.value=''
 })
+
+const onYouTubeIframeFunc=(thisVideo)=>{
+    let value=thisVideo.split('=')[1]
+    onYouTubeIframe(value)
+    socket.emit('videoUrl',value)
+}
 
 const pauseVideoFunc=()=> {
     pauseVideo()
